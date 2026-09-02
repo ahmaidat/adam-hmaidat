@@ -1,0 +1,284 @@
+{
+  "entities": {
+    "Driver": {
+      "title": "Driver",
+      "description": "Captain / Driver registered profile with vehicle, documents, location and balance",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 100 },
+        "username": { "type": "string", "maxLength": 50 },
+        "carType": { "type": "string", "maxLength": 50 },
+        "carClass": { "type": "string", "maxLength": 50 },
+        "carPlate": { "type": "string", "maxLength": 30 },
+        "carModel": { "type": "number" },
+        "governorate": { "type": "string", "maxLength": 100 },
+        "district": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string", "enum": ["pending", "approved", "blocked"] },
+        "isOnline": { "type": "boolean" },
+        "balance": { "type": "number" },
+        "ratingAverage": { "type": "number" },
+        "tripsCount": { "type": "number" },
+        "activeRideId": { "type": "string" },
+        "country": { "type": "string" },
+        "workScope": { "type": "string", "enum": ["local", "intercity", "both"] }
+      },
+      "required": ["fullName", "phone", "username", "governorate", "status"]
+    },
+    "Passenger": {
+      "title": "Passenger",
+      "description": "Passenger account details, linked payment providers and wallet balance",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 100 },
+        "username": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["pending", "approved", "blocked"] },
+        "balance": { "type": "number" },
+        "ratingAverage": { "type": "number" },
+        "tripsCount": { "type": "number" },
+        "activeRideId": { "type": "string" },
+        "country": { "type": "string" }
+      },
+      "required": ["fullName", "phone", "username", "status"]
+    },
+    "RideRequest": {
+      "title": "RideRequest",
+      "description": "Passenger request for intercity or pooled transportation",
+      "type": "object",
+      "properties": {
+        "passengerId": { "type": "string" },
+        "passengerName": { "type": "string", "maxLength": 100 },
+        "passengerPhone": { "type": "string", "maxLength": 20 },
+        "fromArea": { "type": "string", "maxLength": 200 },
+        "toArea": { "type": "string", "maxLength": 200 },
+        "seatsCount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "pooling", "offered", "accepted", "started", "completed", "cancelled"] },
+        "rideId": { "type": "string" },
+        "appliedPromo": { "type": "string" },
+        "discountAmount": { "type": "number" }
+      },
+      "required": ["passengerId", "fromArea", "toArea", "seatsCount", "status"]
+    },
+    "PooledRide": {
+      "title": "PooledRide",
+      "description": "Grouped intercity ride pooling multiple passengers with a driver",
+      "type": "object",
+      "properties": {
+        "driverId": { "type": "string" },
+        "fromArea": { "type": "string", "maxLength": 200 },
+        "toArea": { "type": "string", "maxLength": 200 },
+        "status": { "type": "string", "enum": ["pooling", "offered", "accepted", "started", "completed"] },
+        "startTime": { "type": "string" },
+        "endTime": { "type": "string" },
+        "commissionCharged": { "type": "number" }
+      },
+      "required": ["fromArea", "toArea", "status"]
+    },
+    "IntraCityRide": {
+      "title": "IntraCityRide",
+      "description": "Inner-city direct taxi ride with distance, duration, and driver dispatching",
+      "type": "object",
+      "properties": {
+        "passengerId": { "type": "string" },
+        "passengerName": { "type": "string", "maxLength": 100 },
+        "passengerPhone": { "type": "string", "maxLength": 20 },
+        "driverId": { "type": "string" },
+        "driverName": { "type": "string", "maxLength": 100 },
+        "driverPhone": { "type": "string", "maxLength": 20 },
+        "status": { "type": "string", "enum": ["pending", "accepted", "started", "completed", "cancelled"] },
+        "pickupName": { "type": "string", "maxLength": 200 },
+        "dropoffName": { "type": "string", "maxLength": 200 },
+        "distanceKm": { "type": "number" },
+        "durationMin": { "type": "number" },
+        "price": { "type": "number" },
+        "commission": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cash", "wallet"] },
+        "country": { "type": "string" }
+      },
+      "required": ["passengerId", "pickupName", "dropoffName", "price", "status"]
+    },
+    "ScheduledTrip": {
+      "title": "ScheduledTrip",
+      "description": "Pre-scheduled or recurring intercity trips created by drivers, passengers, or admin",
+      "type": "object",
+      "properties": {
+        "creatorId": { "type": "string" },
+        "creatorType": { "type": "string", "enum": ["driver", "passenger", "admin"] },
+        "creatorName": { "type": "string", "maxLength": 100 },
+        "fromArea": { "type": "string", "maxLength": 200 },
+        "toArea": { "type": "string", "maxLength": 200 },
+        "departureTime": { "type": "string" },
+        "seatsCount": { "type": "number" },
+        "availableSeats": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "accepted", "completed", "cancelled"] },
+        "driverId": { "type": "string" },
+        "driverName": { "type": "string" },
+        "customFare": { "type": "number" },
+        "customCommission": { "type": "number" },
+        "country": { "type": "string" },
+        "isPinnedDaily": { "type": "boolean" },
+        "aiGenerated": { "type": "boolean" }
+      },
+      "required": ["creatorId", "creatorType", "fromArea", "toArea", "departureTime", "status"]
+    },
+    "WalletTransaction": {
+      "title": "WalletTransaction",
+      "description": "Financial transaction ledger for top-ups, withdrawals, commissions, and fares",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userType": { "type": "string", "enum": ["driver", "passenger"] },
+        "type": { "type": "string", "enum": ["deposit", "withdraw", "fare_payment", "commission_deduction", "cancel_fee"] },
+        "amount": { "type": "number" },
+        "walletNumber": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string", "enum": ["completed", "pending", "failed"] },
+        "paymentMethod": { "type": "string", "enum": ["wallet", "cliq", "bank", "cash"] },
+        "country": { "type": "string" }
+      },
+      "required": ["userId", "userType", "type", "amount", "status"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "In-ride live communication message between passenger, driver, and support admin",
+      "type": "object",
+      "properties": {
+        "rideId": { "type": "string" },
+        "sender": { "type": "string", "enum": ["admin", "driver", "passenger"] },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string", "maxLength": 100 },
+        "message": { "type": "string", "maxLength": 1000 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["rideId", "sender", "senderId", "message"]
+    },
+    "Employee": {
+      "title": "Employee",
+      "description": "System employee with assigned RBAC roles and active status",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "maxLength": 100 },
+        "username": { "type": "string", "maxLength": 50 },
+        "role": { "type": "string", "enum": ["employee", "admin"] },
+        "roleCategory": { "type": "string", "enum": ["Admin", "Moderator", "Support"] },
+        "status": { "type": "string", "enum": ["active", "inactive", "on_break"] },
+        "lastActiveTask": { "type": "string", "maxLength": 200 },
+        "isHidden": { "type": "boolean" },
+        "permissions": { "type": "object" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["fullName", "username", "roleCategory"]
+    },
+    "RbacRole": {
+      "title": "RbacRole",
+      "description": "RBAC permission matrix and assigned roles",
+      "type": "object",
+      "properties": {
+        "titleAr": { "type": "string", "maxLength": 100 },
+        "roleCategory": { "type": "string" },
+        "permissions": { "type": "object" }
+      }
+    },
+    "SystemOffer": {
+      "title": "SystemOffer",
+      "description": "Promotional offers and promo codes for passengers and drivers",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "maxLength": 50 },
+        "title": { "type": "string", "maxLength": 100 },
+        "targetType": { "type": "string", "enum": ["passenger", "driver"] },
+        "discountType": { "type": "string", "enum": ["percentage", "fixed"] },
+        "value": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "usageCount": { "type": "number" }
+      },
+      "required": ["code", "title", "targetType", "discountType", "value", "isActive"]
+    },
+    "CommercialAd": {
+      "title": "CommercialAd",
+      "description": "In-app commercial ads and sponsor banners",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 100 },
+        "badge": { "type": "string", "maxLength": 50 },
+        "description": { "type": "string", "maxLength": 300 },
+        "image": { "type": "string" },
+        "target": { "type": "string", "enum": ["passenger", "driver", "all"] },
+        "status": { "type": "string", "enum": ["active", "inactive"] }
+      },
+      "required": ["title", "description", "target", "status"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "In-app notifications for users and drivers",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userType": { "type": "string", "enum": ["passenger", "driver", "admin"] },
+        "title": { "type": "string", "maxLength": 150 },
+        "body": { "type": "string", "maxLength": 500 },
+        "isRead": { "type": "boolean" },
+        "type": { "type": "string", "enum": ["trip_reminder", "booking_success", "general"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "userType", "title", "body", "isRead", "type"]
+    }
+  },
+  "firestore": {
+    "/drivers/{driverId}": {
+      "schema": { "$ref": "#/entities/Driver" },
+      "description": "Drivers collection"
+    },
+    "/passengers/{passengerId}": {
+      "schema": { "$ref": "#/entities/Passenger" },
+      "description": "Passengers collection"
+    },
+    "/rideRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/RideRequest" },
+      "description": "Intercity ride requests collection"
+    },
+    "/pooledRides/{rideId}": {
+      "schema": { "$ref": "#/entities/PooledRide" },
+      "description": "Pooled intercity rides collection"
+    },
+    "/intraCityRides/{rideId}": {
+      "schema": { "$ref": "#/entities/IntraCityRide" },
+      "description": "Inner-city taxi rides collection"
+    },
+    "/scheduledTrips/{tripId}": {
+      "schema": { "$ref": "#/entities/ScheduledTrip" },
+      "description": "Scheduled and daily trips collection"
+    },
+    "/walletTransactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/WalletTransaction" },
+      "description": "Financial transactions ledger collection"
+    },
+    "/chatMessages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Trip chat messages collection"
+    },
+    "/employees/{employeeId}": {
+      "schema": { "$ref": "#/entities/Employee" },
+      "description": "System employees collection"
+    },
+    "/rbacRoles/{roleId}": {
+      "schema": { "$ref": "#/entities/RbacRole" },
+      "description": "RBAC roles collection"
+    },
+    "/systemOffers/{offerId}": {
+      "schema": { "$ref": "#/entities/SystemOffer" },
+      "description": "Promotional offers collection"
+    },
+    "/commercialAds/{adId}": {
+      "schema": { "$ref": "#/entities/CommercialAd" },
+      "description": "Commercial advertisements collection"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/AppNotification" },
+      "description": "App notifications collection"
+    }
+  }
+}

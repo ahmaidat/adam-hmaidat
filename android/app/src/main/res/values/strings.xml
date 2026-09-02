@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Adam Passenger</string>
+    <string name="title_activity_main">Adam Passenger</string>
+    <string name="package_name">com.adam.transport.passenger</string>
+    <string name="custom_url_scheme">com.adam.transport.passenger</string>
+</resources>

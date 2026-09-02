@@ -1,0 +1,87 @@
+{
+  "name": "تطبيق آدم للنقل التشاركي والذكي",
+  "short_name": "آدم للنقل",
+  "description": "منظومة قوافل آدم الموحدة لنقل الركاب والرحلات المباشرة والتشاركية والأشخاص والخدمات اللوجستية",
+  "start_url": "/",
+  "scope": "/",
+  "id": "com.adamride.app",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "lang": "ar",
+  "dir": "rtl",
+  "prefer_related_applications": false,
+  "categories": ["travel", "navigation", "transportation"],
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=72&h=72&fit=crop&q=95&auto=format",
+      "sizes": "72x72",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=96&h=96&fit=crop&q=95&auto=format",
+      "sizes": "96x96",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=128&h=128&fit=crop&q=95&auto=format",
+      "sizes": "128x128",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=144&h=144&fit=crop&q=95&auto=format",
+      "sizes": "144x144",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=152&h=152&fit=crop&q=95&auto=format",
+      "sizes": "152x152",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=192&h=192&fit=crop&q=95&auto=format",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=384&h=384&fit=crop&q=95&auto=format",
+      "sizes": "384x384",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=512&h=512&fit=crop&q=95&auto=format",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "تطبيق الراكب",
+      "short_name": "الراكب",
+      "description": "فتح واجهة راكب آدم المباشرة",
+      "url": "/?view=passenger"
+    },
+    {
+      "name": "تطبيق الكابتن",
+      "short_name": "الكابتن",
+      "description": "فتح واجهة كابتن آدم المباشرة",
+      "url": "/?view=driver"
+    },
+    {
+      "name": "لوحة التحكم",
+      "short_name": "اللوحة",
+      "description": "لوحة التحكم المركزية والإدارة",
+      "url": "/?view=admin"
+    }
+  ]
+}

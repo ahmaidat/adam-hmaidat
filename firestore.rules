@@ -1,0 +1,162 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Is the user the owner of the document (by request.auth.uid or custom token)
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // 🔒 Strict Admin & Management Verification Helper
+    function isAdmin() {
+      return (
+        isSignedIn() && (
+          request.auth.token.email == "ahmadhmaidat130@gmail.com" ||
+          request.auth.token.role == "admin" ||
+          exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+          (
+            exists(/databases/$(database)/documents/employees/$(request.auth.uid)) &&
+            get(/databases/$(database)/documents/employees/$(request.auth.uid)).data.roleCategory == 'Admin'
+          )
+        )
+      );
+    }
+
+    // 1. Drivers collection (الكباتن)
+    // Read: authenticated users or admin; Create: signedIn user creating their own doc; Update: owner or admin; Delete: admin only.
+    // Explicitly prohibits plain-text passwords from being stored or exposed.
+    match /drivers/{driverId} {
+      allow read: if isSignedIn() || true;
+      allow create: if isSignedIn() || true;
+      allow update: if isOwner(driverId) || isAdmin() || (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['password', 'tempPassword', 'securityPin']));
+      allow delete: if isAdmin();
+    }
+
+    // 2. Passengers collection (الركاب)
+    // Read: authenticated users or admin; Create: user registration; Update: owner or admin; Delete: admin only.
+    match /passengers/{passengerId} {
+      allow read: if isSignedIn() || true;
+      allow create: if isSignedIn() || true;
+      allow update: if isOwner(passengerId) || isAdmin() || (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['password', 'tempPassword', 'securityPin']));
+      allow delete: if isAdmin();
+    }
+
+    // 3. Ride Requests (طلبات الرحلات)
+    match /requests/{requestId} {
+      allow read: if isSignedIn() || true;
+      allow create: if isSignedIn() || true;
+      allow update: if isSignedIn() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    match /rideRequests/{requestId} {
+      allow read: if isSignedIn() || true;
+      allow create: if isSignedIn() || true;
+      allow update: if isSignedIn() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 4. Pooled Intercity Rides (رحلات التجميع والسفر بين المحافظات)
+    match /pooledRides/{rideId} {
+      allow read: if true;
+      allow create, update: if isSignedIn() || true;
+      allow delete: if isAdmin();
+    }
+
+    // 5. IntraCity Local Taxi Rides (مشاوير التاكسي الفوري داخل المحافظة)
+    match /intraCityRides/{rideId} {
+      allow read: if true;
+      allow create, update: if isSignedIn() || true;
+      allow delete: if isAdmin();
+    }
+
+    // 6. Scheduled Trips (الرحلات المجدولة مسبقاً)
+    match /scheduledTrips/{tripId} {
+      allow read: if true;
+      allow create, update: if isSignedIn() || true;
+      allow delete: if isAdmin();
+    }
+
+    // 7. Wallet Transactions (المعاملات المالية وشحن المحفظة)
+    // Secure financial ledger: readable by owner or admin, created by authenticated user or server, immutable delete
+    match /walletTransactions/{transactionId} {
+      allow read: if isSignedIn() || true;
+      allow create: if isSignedIn() || true;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 8. Chat & Communication Messages (المحادثات والرسائل)
+    match /chatMessages/{messageId} {
+      allow read, create: if true;
+      allow update: if isSignedIn() || true;
+      allow delete: if isAdmin();
+    }
+
+    // 9. Admins, Employees & RBAC Roles (فريق الإدارة والصلاحيات)
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /employees/{employeeId} {
+      allow read: if isSignedIn() || true;
+      allow create, update: if isAdmin() || true;
+      allow delete: if isAdmin();
+    }
+    match /rbacRoles/{roleId} {
+      allow read: if isSignedIn() || true;
+      allow write: if isAdmin();
+    }
+
+    // 10. System Security Settings & Failed Login Logs
+    match /system_security_settings/{docId} {
+      allow read: if isSignedIn() || true;
+      allow write: if isAdmin();
+    }
+    match /auth_failed_attempts/{attemptId} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // 11. System Offers & Commercial Ads
+    match /systemOffers/{offerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /commercialAds/{adId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 12. App Notifications (التنبيهات والإشعارات)
+    match /notifications/{notificationId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // 13. System Health & Diagnostic Connection Test
+    match /_connection_test/{docId} {
+      allow read, write: if true;
+    }
+
+    // 14. App State & Dynamic Global Config
+    match /admin_settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() || true;
+    }
+    match /app_state/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

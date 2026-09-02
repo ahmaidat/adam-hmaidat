@@ -1,0 +1,36 @@
+{
+  "appId": "com.adamride.driver",
+  "appName": "Adam Captain",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://ais-dev-wmtke3khish3ti5axkad4g-821729690054.europe-west2.run.app/driver.html",
+    "cleartext": true
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon_config_sample",
+      "iconColor": "#10b981",
+      "sound": "beep.wav"
+    },
+    "Geolocation": {
+      "enableHighAccuracy": true,
+      "timeout": 5000,
+      "maximumAge": 0
+    },
+    "Camera": {
+      "presentationStyle": "fullscreen",
+      "saveToGallery": false
+    }
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "allowsLinkPreview": false,
+    "scrollEnabled": true
+  }
+}

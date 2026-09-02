@@ -1,0 +1,36 @@
+{
+  "appId": "com.adamride.passenger",
+  "appName": "Adam Passenger",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://ais-dev-wmtke3khish3ti5axkad4g-821729690054.europe-west2.run.app/passenger.html",
+    "cleartext": true
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon_config_sample",
+      "iconColor": "#f43f5e",
+      "sound": "beep.wav"
+    },
+    "Geolocation": {
+      "enableHighAccuracy": true,
+      "timeout": 10000,
+      "maximumAge": 0
+    },
+    "Camera": {
+      "presentationStyle": "fullscreen",
+      "saveToGallery": false
+    }
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "allowsLinkPreview": false,
+    "scrollEnabled": true
+  }
+}

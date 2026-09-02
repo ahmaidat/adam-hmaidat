@@ -1,0 +1,11 @@
+{
+  "name": "ASZ/آدم للنقل الذكي",
+  "description": "تطبيق وموقع آدم لتجميع وتشارك الرحلات الذكية في الأردن لتخفيف تكاليف الوقود وتوصيل الركاب.",
+  "requestFramePermissions": [
+    "geolocation",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

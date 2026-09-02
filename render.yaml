@@ -1,0 +1,21 @@
+# Render Blueprint Specification for Adam Smart Transportation Platform
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: adam-transport-platform
+    env: node
+    runtime: node
+    plan: free
+    region: frankfurt # You can change to oregon, ohio, singapore
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false # Set securely in Render dashboard
+      - key: PORT
+        value: 10000

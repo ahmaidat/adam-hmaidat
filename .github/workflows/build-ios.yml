@@ -1,0 +1,51 @@
+name: Build iOS IPA
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Web App & Sync iOS
+        run: |
+          npx vite build
+          npx cap add ios || true
+          npx cap sync ios
+
+      - name: Build Passenger App (IPA)
+        run: |
+          cd ios/App
+          xcodebuild -project App.xcodeproj -scheme App -sdk iphoneos -configuration Release archive -archivePath build/Passenger.xcarchive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+          mkdir -p Payload
+          cp -r build/Passenger.xcarchive/Products/Applications/App.app Payload/
+          zip -r $GITHUB_WORKSPACE/Passenger-App.ipa Payload
+        env:
+          VITE_APP_MODE: passenger
+
+      - name: Build Driver App (IPA)
+        run: |
+          cd $GITHUB_WORKSPACE
+          VITE_APP_MODE=driver npx vite build
+          npx cap sync ios
+          cd ios/App
+          xcodebuild -project App.xcodeproj -scheme App -sdk iphoneos -configuration Release archive -archivePath build/Driver.xcarchive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+          mkdir -p Payload_Driver
+          cp -r build/Driver.xcarchive/Products/Applications/App.app Payload_Driver/
+          zip -r $GITHUB_WORKSPACE/Driver-App.ipa Payload_Driver
+
+      - name: Upload IPAs
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-Apps-IPA
+          path: |
+            Passenger-App.ipa
+            Driver-App.ipa
